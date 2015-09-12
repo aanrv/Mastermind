@@ -1,21 +1,23 @@
 import Control.Monad (unless, when)
 import System.Random (newStdGen, randomRs)
-import System.Exit (exitSuccess)
 
-sequenceLen		= 4 		:: Int
-(minNum, maxNum)	= ('1', '6')	:: (Char, Char)
+-- Length of sequence
+sequenceLen	= 4 :: Int
+-- Bounds of possible elements in sequence
+(minNum,maxNum)	= ('1', '6') :: (Char, Char)
 
-exitString	= ":q"			:: String
-exitMessage	= "See you later!"	:: String
+-- Expected response to indicate boredom
+exitString	= ":q"
+-- A heartwarming message to display on exit
+exitMessage	= "Good riddance noob."
 
--- Generates a random sequence of length n between minNum and maxNum
+-- Generates a random sequence of length n containing elements between minNum and maxNum
 generateSequence :: Int -> IO String
 generateSequence n = do
 	gen <- newStdGen
 	return $ take n $ randomRs (minNum, maxNum) gen
 
 -- Checks if user's answer is a valid in terms of length and character range.
--- Guess length must be equal to answer length and characters must be of the set [minNum..maxNum]
 checkValidity :: String -> String -> IO Bool
 checkValidity ans gues
 	| length ans /= length gues = do
@@ -49,7 +51,7 @@ compareSequence answer guess = (length answer - length ans, length ans - length 
 	removeElem _ [] = []
 	removeElem c (x:xs) = if c == x then xs else x : removeElem c xs
 
-	-- Removes an instance of each character in the second string from the first
+	-- Removes an instance of each character in the second list from the first
 	removeContaining :: (Eq a) => [a] -> [a] -> [a]
 	removeContaining answ [] = answ
 	removeContaining answ (g:gs) =	if elem g answ then removeContaining (removeElem g answ) gs
@@ -58,6 +60,7 @@ compareSequence answer guess = (length answer - length ans, length ans - length 
 	(ans, gss) 	= removeOneToOne answer guess
 	allRemovedAns 	= removeContaining ans gss
 
+-- Notify the user of their guess's accuracy
 displayRoundStats :: Int -> Int -> IO ()
 displayRoundStats correctPlace wrongPlace = do
 	putStrLn $ "Correct elements in the correct place:\t" ++ show correctPlace
@@ -90,10 +93,11 @@ main = do
 	wantsToExit <- playGame answer 1
 	
 	unless wantsToExit $ do
-	-- I like to think I'm funny
-	putStrLn "Would you not like to not play again? [y/n]"
-	confusedResponse <- getLine
+		-- I think I'm funny
+		putStrLn "Would you not like to not play again? [y/n]"
+		confusedResponse <- getLine
 	
-	if elem confusedResponse ["Y", "y"] then main
-	else putStrLn exitMessage
+		if elem confusedResponse ["Y", "y"]
+		then main
+		else putStrLn exitMessage
 	
