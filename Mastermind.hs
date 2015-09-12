@@ -90,6 +90,7 @@ main = do
 	wantsToExit <- playGame answer 1
 	
 	unless wantsToExit $ do
+	-- I like to think I'm funny
 	putStrLn "Would you not like to not play again? [y/n]"
 	confusedResponse <- getLine
 	
