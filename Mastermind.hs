@@ -6,12 +6,13 @@ sequenceLen	= 4 :: Int
 -- Bounds of possible elements in sequence
 (minNum,maxNum)	= ('1', '6') :: (Char, Char)
 
--- Expected response to indicate boredom
+-- The expected response to indicate boredom
 exitString	= ":q"
 -- A heartwarming message to display on exit
 exitMessage	= "Good riddance noob."
 
--- Generates a random sequence of length n containing elements between minNum and maxNum
+-- Generates a random sequence of length n 
+-- containing elements between minNum and maxNum
 generateSequence :: Int -> IO String
 generateSequence n = do
 	gen <- newStdGen
@@ -31,20 +32,23 @@ checkValidity ans gues
 		return elemsMatch
   where
 	elementsMatch :: (Eq a) => [a] -> [a] -> Bool
-	elementsMatch range = foldr (\v c -> if not (elem v range) then c && False else c && True) True
+	elementsMatch range =
+		foldr (\v c -> if not (elem v range) then c && False else c && True) True
 
 -- Compares guess to answer.
 -- Calulcates (correct elements in correct position, correct elements in wrong position)
 compareSequence	:: String -> String -> (Int, Int)
-compareSequence answer guess = (length answer - length ans, length ans - length allRemovedAns)
+compareSequence answer guess =
+	(length answer - length ans, length ans - length allRemovedAns)
   where
 	-- Given two lists, removes identical characters at the same index
 	removeOneToOne :: (Eq a) => [a] -> [a] -> ([a], [a])
 	removeOneToOne [] b = ([], b)
 	removeOneToOne a [] = (a, [])
-	removeOneToOne (a:as) (b:bs) = 	let alreadyRemoved = removeOneToOne as bs
-					in if a == b then alreadyRemoved
-					   else (a : fst alreadyRemoved, b : snd alreadyRemoved)
+	removeOneToOne (a:as) (b:bs) =
+		let alreadyRemoved = removeOneToOne as bs
+		in if a == b then alreadyRemoved
+		   else (a : fst alreadyRemoved, b : snd alreadyRemoved)
 
 	-- Removes first occurence of an element in a list
 	removeElem :: (Eq a) => a -> [a] -> [a]
@@ -54,8 +58,9 @@ compareSequence answer guess = (length answer - length ans, length ans - length 
 	-- Removes an instance of each character in the second list from the first
 	removeContaining :: (Eq a) => [a] -> [a] -> [a]
 	removeContaining answ [] = answ
-	removeContaining answ (g:gs) =	if elem g answ then removeContaining (removeElem g answ) gs
-					else removeContaining answ gs
+	removeContaining answ (g:gs) = if elem g answ
+				       then removeContaining (removeElem g answ) gs
+				       else removeContaining answ gs
 	
 	(ans, gss) 	= removeOneToOne answer guess
 	allRemovedAns 	= removeContaining ans gss
@@ -69,7 +74,7 @@ displayRoundStats correctPlace wrongPlace = do
 playGame :: String -> Int -> IO Bool
 playGame answer round = do
 	putStrLn $ "Round " ++ show round ++ 
-		   "Enter a guess:"
+		   "\nEnter a guess:"
 	guess <- getLine
 	
 	if guess == exitString then do
