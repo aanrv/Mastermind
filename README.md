@@ -1,3 +1,4 @@
 # Mastermind
 
-A single player take on the classic board game, Mastermind.
+An implementation of the board game, Mastermind, played on the CLI.
+
