@@ -1,4 +1,5 @@
 # Mastermind
 
-An implementation of the board game, Mastermind, played on the CLI.
+An implementation of the board game, Mastermind.
+Played on the CLI.
 
