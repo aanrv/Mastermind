@@ -1,18 +1,14 @@
 import Control.Monad (unless, when)
 import System.Random (newStdGen, randomRs)
 
--- Length of sequence
-sequenceLen	= 4 :: Int
--- Bounds of possible elements in sequence
-(minNum,maxNum)	= ('1', '6') :: (Char, Char)
+sequenceLen	= 4 :: Int			-- Length of sequence
+(minNum,maxNum)	= ('1', '6') :: (Char, Char)	-- Bounds of possible elements in sequence
 
--- The expected response to indicate boredom
-exitString	= ":q"
--- A heartwarming message to display on exit
-exitMessage	= "Good riddance noob."
+exitString	= ":q"				-- The expected response to indicate boredom
+exitMessage	= "Good riddance noob."		-- A heartwarming message to display on exit
 
--- Generates a random sequence of length n 
--- containing elements between minNum and maxNum
+{- Generates a random sequence of length n 
+   containing elements between minNum and maxNum -}
 generateSequence :: Int -> IO String
 generateSequence n = do
 	gen <- newStdGen
@@ -35,8 +31,8 @@ checkValidity ans gues
 	elementsMatch range =
 		foldr (\v c -> if not (elem v range) then c && False else c && True) True
 
--- Compares guess to answer.
--- Calulcates (correct elements in correct position, correct elements in wrong position)
+{- Compares guess to answer.
+   Calulcates (correct elements in correct position, correct elements in wrong position) -}
 compareSequence	:: String -> String -> (Int, Int)
 compareSequence answer guess =
 	(length answer - length ans, length ans - length allRemovedAns)
@@ -65,7 +61,7 @@ compareSequence answer guess =
 	(ans, gss) 	= removeOneToOne answer guess
 	allRemovedAns 	= removeContaining ans gss
 
--- Notify the user of their guess's accuracy
+{- Notify the user of their guess's accuracy -}
 displayRoundStats :: Int -> Int -> IO ()
 displayRoundStats correctPlace wrongPlace = do
 	putStrLn $ "Correct elements in the correct place:\t" ++ show correctPlace
@@ -98,8 +94,7 @@ main = do
 	wantsToExit <- playGame answer 1
 	
 	unless wantsToExit $ do
-		-- I think I'm funny
-		putStrLn "Would you not like to not play again? [y/n]"
+		putStrLn "Would you not like to not play again? [y/n]"	-- I think I'm funny
 		confusedResponse <- getLine
 	
 		if elem confusedResponse ["Y", "y"]
